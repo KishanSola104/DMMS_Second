@@ -1,0 +1,149 @@
+[
+    {
+        "roleId": 1,
+        "roleName": "SUPER_ADMIN"
+    },
+    {
+        "roleId": 2,
+        "roleName": "HEAD_MASTER"
+    },
+    {
+        "roleId": 3,
+        "roleName": "ASSIS_TEACHER"
+    },
+    {
+        "roleId": 4,
+        "roleName": "CLEARK"
+    },
+    {
+        "roleId": 5,
+        "roleName": "SUB_TEACHER"
+    },
+    {
+        "roleId": 6,
+        "roleName": "CLASS_TEACHER"
+    }
+]
+
+/ marks model
+
+const mongoose = require("mongoose");
+
+const markSchema = new mongoose.Schema(
+{
+    markId: {
+        type: String,
+        unique: true,
+        required: true
+    },
+
+    studentId: {
+        type: String,
+        required: true
+    },
+
+    examId: {
+        type: String,
+        required: true
+    },
+
+    classId: {
+        type: String,
+        required: true
+    },
+
+    academicYearId: {
+        type: String,
+        required: true
+    },
+
+    subjects: [
+        {
+            subjectId: {
+                type: String,
+                required: true
+            },
+
+            subjectTeacherId: {
+                type: String,
+                required: true
+            },
+
+            marks: {
+                type: Number,
+                required: true,
+                min: 0
+            },
+
+            grade: {
+                type: String,
+                required: true
+            },
+
+            updatedAt: {
+                type: Date,
+                default: Date.now
+            }
+        }
+    ],
+
+    totalMarks: {
+        type: Number,
+        default: 0
+    },
+
+    percentage: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 100
+    },
+
+    behavior: {
+        type: String,
+        default: ""
+    },
+
+    remarks: {
+        type: String,
+        default: ""
+    },
+
+    resultStatus: {
+        type: String,
+        enum: ["DRAFT", "PENDING", "LOCKED", "PUBLISHED"],
+        default: "DRAFT"
+    },
+
+    lockedBy: {
+        type: String,
+        default: null
+    },
+
+    publishedBy: {
+        type: String,
+        default: null
+    }
+},
+{
+    timestamps: true
+}
+);
+
+module.exports = mongoose.model("Mark", markSchema);
+
+
+
+VITE_BACKEND_API_URL=http://localhost:8000/api
+env is written above
+
+// Verify Logged-in School
+export const verifySchool = async () => {
+  try {
+    const response = await api.get(import.meta.env.VITE_BACKEND_API_URL+"/auth/verify-school");
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+checking will be done as shown above
