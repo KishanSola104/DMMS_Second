@@ -2,21 +2,30 @@ const mongoose = require("mongoose");
 
 const classSchema = new mongoose.Schema(
     {
-        schoolId: { type: mongoose.Schema.Types.ObjectId, ref: "School", required: true },
+        schoolId: { type: mongoose.Schema.Types.ObjectId, ref: "School", required: true, index: true },
 
-        classId: { type: String, required: true, trim: true },
+        name: { type: String, required: true, trim: true, maxlength: 100 },
 
-        standard: { type: String, required: true, trim: true },
+        code: { type: String, required: true, trim: true, maxlength: 30 },
 
-        academicYearId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademicYear", required: true },
+        subjects: [{
+            type: mongoose.Schema.Types.ObjectId, ref: "Subject", required: true
+        }],
 
-        maximumCapacity: { type: Number, required: true, min: 1 },
+        sequence: { type: Number, required: true },
 
-        status: { type: String, enum: ["Active", "Inactive"], default: "Active" }
+        category: { type: String, enum: ["KINDERGARTEN", "PRIMARY", "UPPER_PRIMARY"], required: true },
+
+        status: { type: String, enum: ["ACTIVE", "INACTIVE"], default: "ACTIVE", required: true }
     },
     {
         timestamps: true
     }
-)
+);
+
+classSchema.index(
+    { schoolId: 1, code: 1 },
+    { unique: true }
+);
 
 module.exports = mongoose.model("Class", classSchema);

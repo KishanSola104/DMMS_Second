@@ -2,24 +2,25 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
   {
-    employeeId: { type: mongoose.Schema.Types.ObjectId, ref: "Employee", required: true, unique: true },
+    schoolId: { type: mongoose.Schema.Types.ObjectId, ref: "School", required: true, index: true },
 
-    userId: { type: String, required: true, unique: true, uppercase: true, trim: true },
+    employeeId: { type: mongoose.Schema.Types.ObjectId, ref: "Employee", required: true, index: true },
 
-    userName: { type: String, required: true, trim: true },
+    userName: { type: String, required: true, unique: true, trim: true, maxlength: 50 },
+
+    email: { type: String, unique: true, required: true, lowercase: true, trim: true, maxlength: 150 },
+
+    passwordHash: { type: String, required: true, maxlength: 255 },
 
     roleIds: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Role",
+      required: true
     }],
 
-    password: { type: String, required: true },
+    status: { type: String, enum: ["ACTIVE", "INACTIVE", "LOCKED"], required: true, default: "ACTIVE" },
 
-    accountStatus: { type: String, enum: ["Active", "Inactive", "Suspended"], default: "Active" },
-
-    lastLogin: { type: Date, default: null },
-
-    failedLoginAttempts: { type: Number, default: 0 },
+    lastLoginAt: { type: Date, default: null },
 
     passwordChangedAt: { type: Date, default: null },
   },

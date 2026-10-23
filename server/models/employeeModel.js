@@ -2,41 +2,45 @@ const mongoose = require("mongoose");
 
 const employeeSchema = new mongoose.Schema(
   {
-    employeeId: { type: String, unique: true, required: true, trim: true, uppercase: true },
+    schoolId: { type: mongoose.Schema.Types.ObjectId, ref: "School", required: true, index: true },
 
-    schoolId: { type: mongoose.Schema.Types.ObjectId, ref: "School", required: true },
+    employeeCode: { type: String, required: true, trim: true, maxlength: 30 },
 
-    firstName: { type: String, required: true, trim: true },
+    firstName: { type: String, required: true, trim: true, maxlength: 100 },
 
-    lastName: { type: String, required: true, trim: true },
+    middleName: { type: String, trim: true, maxlength: 100, default: null },
 
-    gender: { type: String, enum: ["Male", "Female", "Other"], default: null },
+    lastName: { type: String, required: true, trim: true, maxlength: 100 },
 
-    dob: { type: Date, default: null },
+    dateOfBirth: { type: Date, default: null },
 
-    email: { type: String, unique: true, required: true, lowercase: true, trim: true },
+    gender: { type: String, enum: ["MALE", "FEMALE", "OTHER"], default: null },
 
-    mobileNumber: { type: String, unique: true, required: true, trim: true },
+    designation: { type: String, required: true, trim: true, maxlength: 100 },
 
-    address: { type: String, default: null, trim: true },
+    phone: { type: String, required: true, trim: true, maxlength: 20 },
 
-    qualification: { type: String, default: null, trim: true },
+    email: { type: String, unique: true, required: true, lowercase: true, trim: true, maxlength: 150 },
 
-    experience: { type: String, default: null, trim: true },
+    qualification: { type: String, required: true, trim: true, maxlength: 100 },
 
-    joiningDate: { type: Date, default: null },
+    experience: { type: String, default: null, trim: true, maxlength: 100 },
 
-    designation: { type: String, required: true, trim: true },
+    joiningDate: { type: Date, required: true },
 
-    department: { type: String, default: null, trim: true },
+    salary: { type: Number, required: true },
 
-    salary: { type: Number, default: null },
-
-    status: { type: String, enum: ["Active", "Inactive"], default: "Active" },
+    status: { type: String, enum: ["ACTIVE", "INACTIVE", "LEFT"], default: "ACTIVE", required: true },
   },
   {
     timestamps: true
   }
 );
+
+employeeSchema.index(
+  { schoolId: 1, employeeCode: 1 },
+  { unique: true }
+);
+
 
 module.exports = mongoose.model("Employee", employeeSchema);

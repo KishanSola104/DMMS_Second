@@ -2,57 +2,62 @@ const mongoose = require("mongoose");
 
 const studentSchema = new mongoose.Schema(
     {
-        studentId: { type: String, unique: true, required: true },
+        schoolId: { type: mongoose.Schema.Types.ObjectId, ref: "School", required: true, index: true },
 
-        schoolId: { type: mongoose.Schema.Types.ObjectId, ref: "School", required: true },
+        studentId: { type: String, required: true, trim: true, maxlength: 50 },
 
-        admissionNo: { type: String, unique: true, required: true },
+        admissionNumber: { type: String, required: true, trim: true, maxlength: 50 },
 
-        admissionClass: { type: String, required: true },
+        admissionClass: { type: String, required: true, trim: true, maxlength: 100 },
 
         admissionDate: { type: Date, required: true },
 
-        admissionAcademicYearId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademicYear", required: true },
+        admissionAcademicYearId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademicYear", required: true, index: true },
 
-        firstName: { type: String, required: true },
+        firstName: { type: String, required: true, trim: true, maxlength: 100 },
 
-        lastName: { type: String, required: true },
+        lastName: { type: String, required: true, trim: true, maxlength: 100 },
 
-        gender: { type: String, enum: ["Male", "Female", "Other"], required: true },
+        dateOfBirth: { type: Date, required: true },
 
-        dob: { type: Date, required: true },
+        gender: { type: String, enum: ["MALE", "FEMALE", "OTHER"], required: true },
 
         bloodGroup: { type: String, enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"], required: true },
 
-        religion: { type: String, required: true },
+        religion: { type: String, required: true, trim: true, maxlength: 50 },
 
-        address: { type: String, required: true },
+        address: { type: String, required: true, trim: true, maxlength: 500 },
 
-        fatherName: { type: String, required: true },
+        fatherName: { type: String, required: true, trim: true, maxlength: 100 },
 
-        fatherOccupation: { type: String, required: true },
+        fatherOccupation: { type: String, required: true, trim: true, maxlength: 100 },
 
-        fatherContact: { type: String, required: true },
+        fatherContact: { type: String, required: true, trim: true, maxlength: 20 },
 
-        motherName: { type: String, required: true },
+        motherName: { type: String, required: true, trim: true, maxlength: 100 },
 
-        motherOccupation: { type: String, required: true },
+        motherOccupation: { type: String, required: true, trim: true, maxlength: 100 },
 
-        motherContact: { type: String, required: true },
+        motherContact: { type: String, required: true, trim: true, maxlength: 20 },
 
-        classId: { type: mongoose.Schema.Types.ObjectId, ref: "Class", required: true },
+        classId: { type: mongoose.Schema.Types.ObjectId, ref: "Class", required: true, index: true },
 
-        sectionId: { type: mongoose.Schema.Types.ObjectId, ref: "Section", required: true },
+        profilePhotoUrl: { type: String, trim: true, maxlength: 500, default: null },
 
-        rollNo: { type: String, required: true },
-
-        academicYearId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademicYear", required: true },
-
-        status: { type: String, enum: ["Active", "Inactive", "Left", "Completed"], default: "Active" }
+        status: { type: String, enum: ["ACTIVE", "INACTIVE", "TRANSFERRED", "ALUMNI"], default: "ACTIVE" }
     },
     {
         timestamps: true
     }
-)
+);
+studentSchema.index(
+    { schoolId: 1, studentId: 1 },
+    { unique: true }
+);
+
+studentSchema.index(
+    { schoolId: 1, admissionNumber: 1 },
+    { unique: true }
+);
 
 module.exports = mongoose.model("Student", studentSchema);

@@ -2,19 +2,18 @@ const mongoose = require("mongoose");
 
 const roleSchema = new mongoose.Schema(
   {
-    roleCode: { type: String, required: true, unique: true, uppercase: true, trim: true },
+    name: { type: String, required: true, unique: true, trim: true, maxlength: 50 },
 
-    roleName: { type: String, required: true, unique: true, trim: true },
-    
-    description: { type: String, default: null },
+    code: { type: String, required: true, unique: true, uppercase: true, trim: true, maxlength: 30 },
 
-    isActive: { type: Boolean, default: true }
+    description: { type: String, trim: true, maxlength: 200, default: null },
+
+    status: { type: String, enum: ["ACTIVE", "INACTIVE"], default: "ACTIVE", required: true }
   },
   {
     timestamps: true,
   }
 );
 
-module.exports =
-  mongoose.models.Role || mongoose.model("Role", roleSchema);
+module.exports = mongoose.model("Role", roleSchema);
 

@@ -2,27 +2,30 @@ const mongoose = require("mongoose");
 
 const auditLogSchema = new mongoose.Schema(
     {
-        auditLogId: { type: String, unique: true, required: true },
+        schoolId: { type: mongoose.Schema.Types.ObjectId, ref: "School", required: true, index: true },
 
-        schoolId: { type: mongoose.Schema.Types.ObjectId, ref:"School", required:true},
+        academicYearId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademicYear", default: null, index: true },
 
-        userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
 
-        action: { type: String, enum: ["CREATE", "UPDATE", "DELETE", "LOGIN", "LOGOUT", "PASSWORD_CHANGE", "STATUS_CHANGE"], required: true },
+        userRole: { type: String, trim: true, maxlength: 50, default: null },
 
-        entity: { type: String, required: true, enum: ["School", "AcademicYear", "Employee", "User", "Student", "Class", "Section", "Subject", "Exam", "Mark", "Role", "Notification"] },
+        action: { type: String, required: true, trim: true, uppercase: true, maxlength: 50 },
 
-        entityId: { type: mongoose.Schema.Types.ObjectId, required: true },
+        entityType: { type: String, required: true, trim: true, maxlength: 100 },
 
-        oldData: { type: mongoose.Schema.Types.Mixed, default: null },
+        entityId: { type: mongoose.Schema.Types.ObjectId, required: true, index: true },
 
-        newData: { type: mongoose.Schema.Types.Mixed, default: null },
+        oldValue: { type: mongoose.Schema.Types.Mixed, default: null },
 
-        ipAddress: { type: String, default: null }
+        newValue: { type: mongoose.Schema.Types.Mixed, default: null }
     },
     {
-        timestamps: true
+        timestamps: { createdAt: true, updatedAt: false }
     }
 );
+
+auditLogSchema.index({ schoolId: 1, createdAt: -1 });
+auditLogSchema.index({ schoolId: 1, entityType: 1, entityId: 1, createdAt: -1 });
 
 module.exports = mongoose.model("AuditLog", auditLogSchema);

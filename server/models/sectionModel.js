@@ -2,23 +2,29 @@ const mongoose = require("mongoose");
 
 const sectionSchema = new mongoose.Schema(
     {
-        sectionId: { type: String, required: true },
+        schoolId: { type: mongoose.Schema.Types.ObjectId, ref: "School", required: true, index: true },
 
-        schoolId: { type: mongoose.Schema.Types.ObjectId, ref:"School", required:true},
-        
-        classId: { type: mongoose.Schema.Types.ObjectId, ref: "Class", required: true },
+        academicYearId: { type: mongoose.Schema.Types.ObjectId, ref: "AcademicYear", required: true, index: true },
 
-        section: { type: String, required: true, trim: true, uppercase: true },
+        classId: { type: mongoose.Schema.Types.ObjectId, ref: "Class", required: true, index: true },
 
-        classTeacherId: { type: mongoose.Schema.Types.ObjectId, ref: "Employee", required: true },
+        name: { type: String, required: true, trim: true, uppercase: true, maxlength: 50 },
 
-        maximumCapacity: { type: Number, required: true, min: 1 },
+        code: { type: String, required: true, trim: true, maxlength: 30 },
 
-        status: { type: String, enum: ["Active", "Inactive"], default: "Active" }
+        capacity: { type: Number, default: null },
+
+        classTeacherId: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null, index: true },
+
+        status: { type: String, enum: ["ACTIVE", "INACTIVE"], default: "ACTIVE" }
     },
     {
         timestamps: true
     }
-)
+);
+sectionSchema.index(
+    { academicYearId: 1, classId: 1, code: 1 },
+    { unique: true }
+);
 
 module.exports = mongoose.model("Section", sectionSchema);
